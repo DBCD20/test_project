@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    list-style: none;
+    
+}
+#container {
+    width: 100%;
+    height: 100vh;
+    padding: 0.75em;
+}
+#container > * {
+    background: #f7f7f7;
+    width: 100%;
+    border-radius: 0.25em;
+}
+#container #searchbox {
+    min-height: 70px;
+}
+input {
+    display: block;
+    width: 100%;
+    line-height: 30px;
+    padding-left: 0.5em;
+}
+#container ul {
+    display: block;
+    width: 100%;
+    max-height: 250px;
+    overflow: auto;
+    box-shadow: 0 3px 5px gainsboro;
+}
+#container ul li {
+    display: block;
+    background: white;
+    padding-left: 0.5em;
+    line-height: 40px;
+    border-bottom: 0.5px solid gainsboro;
+}
+#container ul li:hover {
+    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+    color: white;
+    cursor: pointer;
+    border-left: 10px solid #3a1c71;
+    box-shadow: 0 3px 10px gainsboro;
+    transition: 0.2s linear;
+    border-bottom: none;
+}
+#container #clientBox {
+    line-height: 40px;
+    margin-top: 0.5em;
+    padding-left: 0.5em;
+}
+#container #detailsBox {
+    min-height: 400px;
+    margin-top: 0.5em;
+    padding: 1em;
+}
+#container button {
+    height: 50px;
+    margin-top: 0.5em;
+    border: none;
+    background: #6415D5;
+    color: white;
+    font-size: 1.2em;
+    box-shadow: 0 4px 10px gainsboro;
+    letter-spacing: 0.08em;
+}
+#container i {
+    color: #deff22;
+}
+

@@ -4,112 +4,31 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link href="./style.css" type="text/css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet"  />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
         <title>RESTful API</title>
     </head>
     <body>
         <div id="container">
-            <div id="searchbox">
-                <input type="text" id="filterBox" placeholder="Search for client.."/>
+            <div class="form-box">
+                <div id="searchbox">
+                <span id="span-search">
+                    <input type="text" id="filterBox" placeholder="Search for client.." required/><i class="fa fa-caret-down"></i>
+                </span>
                 <ul></ul>
+                </div>
+                <div id="clientBox" contenteditable="false"></div>
+                <div id="details">
+                    <span id="close"><i class="fas fa-times"></i></span>
+                    <div id="detailsBox" contenteditable="false"></div>
+                        <div id="toolbox">
+                            <span id="edit">Edit</span>
+                            <span id="delete"><i class="fas fa-trash-alt"></i></span>
+                        </div>
+                </div>
+                <button id='save'><i class="fa fa-save"></i> SAVE</button>
             </div>
-            <div id="clientBox" contenteditable="true"></div>
-            <div id="detailsBox"contenteditable="true">
-                <div></div>
-                <div></div>
-                
-            </div>
-            <button><strong>SAVE</strong> <i class="fa fa-save"></i></button>
+            <button id="add-new"><i class="fa fa-plus"></i></button>
         </div>
-<script>
-            const   searchBox     = document.querySelector('#searchbox'),
-                    ul            = document.querySelector('#container ul'),
-                    filterBox     = document.querySelector('#filterBox'),
-                    clientBox     = document.querySelector('#container #clientBox'),
-                    detailsBox    = document.querySelector('#detailsBox'),
-                    button        = document.querySelector('#container button'),
-                    fragment      = document.createDocumentFragment(),
-                    list          = document.querySelector('ul').childNodes,
-                    xhr           = new XMLHttpRequest();
-            
-let populate = () => {
-            xhr.onreadystatechange = () => {
-                if(xhr.readyState == 4 && xhr.status == 200){
-                    let data = JSON.parse(xhr.responseText)
-                        console.log(data)
-                    data.forEach(name => {
-                        let li = document.createElement('li')
-                            li.dataset.id = name._id;
-                            li.textContent = name.client;
-                            fragment.appendChild(li)
-                    })
-                    ul.appendChild(fragment)
-                }
-            }
-            xhr.open('GET', '/api/data')
-            xhr.send()
-  }
-
-//CREATE NEW CLIENT DB
-button.onclick = event => {
-     console.log(button.innerText)
-    let infoData = {
-        client: clientBox.innerText,
-        acceptSR: detailsBox.innerText
-    }
-    console.log(infoData)
-    infoData = JSON.stringify(infoData);
-    
-    xhr.onreadystatechange = () => {
-        if(xhr.readyState == 4 && xhr.status == 200){
-            let data = JSON.parse(xhr.responseText)
-                        console.log(data)
-                        let li = document.createElement('li')
-                            li.dataset.id = data._id;
-                            li.textContent = data.client;
-                            fragment.appendChild(li)
-                    
-                    ul.appendChild(fragment)
-                }
-            }
-            xhr.open('POST', '/api/data')
-            xhr.setRequestHeader('Content-Type', "application/json")
-            xhr.send(infoData)
-                   
-}
-
-
-//SHOW SPECIFIC CLIENT
-ul.onclick = event => {
-   
-    if(event.target && event.target.nodeName == "LI"){
-        let infoId = event.target.dataset.id;
-            xhr.onreadystatechange = () => {
-            if(xhr.readyState == 4 && xhr.status == 200){
-                data = JSON.parse(xhr.responseText)
-                clientBox.innerText  = data.client;
-                detailsBox.innerText = data.acceptSR;
-                button.innerText = "Update";
-            }
-    }
-    xhr.open('GET', 'api/data/'+ infoId)
-    //   xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send()
-    }
-}
-
-
-filterBox.onkeyup = event => {
-    for( let i = 0; i < list.length; i++){
-       if(list[i].innerText.indexOf(filterBox.value) > -1){
-           list[i].style.display = '';
-       } else{
-           list[i].style.display = 'none'; 
-       }
-       
-    }
-}
-window.onload = populate;
-</script>
+    <script src='app.js'></script>
     </body>
 </html>

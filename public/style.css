@@ -6,69 +6,183 @@
     list-style: none;
     
 }
-#container {
-    width: 100%;
-    height: 100vh;
-    padding: 0.75em;
+
+:placeholder {
+    font-style: italic;
+    letter-spacing: 0.08em;
 }
-#container > * {
-    background: #f7f7f7;
+
+#container {
+    background: linear-gradient(to bottom right, rgba(245,245,245,0.9) ,rgba(245,245,245,1)), url('https://images.pexels.com/photos/911738/pexels-photo-911738.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940') no-repeat center;
+    background-size: cover;
+    width: 100%;
+    min-height: 100vh;
+    padding: 2em;
+}
+.form-box {
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top: 10vh;
+}
+#container .form-box > * {
+    background: white;
     width: 100%;
     border-radius: 0.25em;
+    
+
 }
-#container #searchbox {
-    min-height: 70px;
+#searchbox {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+#container #span-filter {
+    display: inline-block;
+    width: 100%;
 }
 input {
-    display: block;
-    width: 100%;
-    line-height: 30px;
-    padding-left: 0.5em;
+    display: inline-block;
+    width: 90%;
+    line-height: 40px;
+    padding-left: 0.7em;
+    border: none;
+    border-radius: 4px;
 }
-#container ul {
-    display: block;
+#span-search {
+    position: relative;
+    height: auto;
+}
+#span-search i {
+    width: 10%;
+    text-align: center;
+    display: inline-block;
+    padding: 0.5em;
+    border-left: 1px solid #f2f2f2;
+    /*float: right;*/
+}
+
+#container .form-box ul {
+    position: absolute;
     width: 100%;
+    max-width: 700px;
+    height: 0;
     max-height: 250px;
+    z-index: 5;
     overflow: auto;
     box-shadow: 0 3px 5px gainsboro;
+    transition: 0.3s ease-in-out;
 }
-#container ul li {
+#container .form-box ul li {
     display: block;
     background: white;
-    padding-left: 0.5em;
+    padding-left: 1em;
     line-height: 40px;
-    border-bottom: 0.5px solid gainsboro;
+    border-bottom: 0.5px solid #f2f2f2;
 }
-#container ul li:hover {
+#container .form-box ul li:hover {
     background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
     color: white;
     cursor: pointer;
     border-left: 10px solid #3a1c71;
     box-shadow: 0 3px 10px gainsboro;
-    transition: 0.2s linear;
     border-bottom: none;
+    transition: 0.5s;
 }
-#container #clientBox {
+#container .form-box #clientBox {
+    height: 40px;
     line-height: 40px;
-    margin-top: 0.5em;
-    padding-left: 0.5em;
+    margin-top: 4em;
+    padding-left: 1em;
 }
-#container #detailsBox {
+#container .form-box #detailsBox {
     min-height: 400px;
-    margin-top: 0.5em;
-    padding: 1em;
+    max-height: 700px;
+    margin-top: 1em;
+    line-height: 26px;
+    padding: 2em;
+    position: relative;
 }
-#container button {
-    height: 50px;
-    margin-top: 0.5em;
+#container .form-box #save {
+    display: none;
+    height: 40px;
+    margin-top: 1em;
     border: none;
-    background: #6415D5;
+    background: linear-gradient(to right, #8e2de2,#4a00e0);
     color: white;
-    font-size: 1.2em;
-    box-shadow: 0 4px 10px gainsboro;
-    letter-spacing: 0.08em;
+    font-size: 1em;
+    box-shadow: 0 2px 5px gray;
+    letter-spacing: 0.04em;
+    
 }
-#container i {
-    color: #deff22;
+button {
+    outline: none;
+}
+button:hover, #span-search i:hover {
+    cursor: pointer;
+}
+:focus {
+    outline: none;
+    box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+    -webkit-box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+    -moz-box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+}
+.shadow {
+    box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+    -webkit-box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+    -moz-box-shadow: 0px 5px 17px -6px rgba(57,56,56,0.75);
+}
+#details {
+    position: relative;
+}
+#filterBox:focus {
+    box-shadow: none;
+}
+#update:disable {
+    background: #f2f2f2;
+}
+#add-new {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background: #56ab2f;
+    color: white;
+    position: fixed;
+    bottom: 1em; right: 1em;
+    border: none;
+    border-radius: 100%;
+    box-shadow: 0 0 10px #ccc;
+    font-size: 1em;
+}
+#toolbox {
+    width: 100%;
+    height: 40px;
+    padding: 1em;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 1em;
 }
 
+#close {
+    display: none;
+    color: lightgrey;
+    position: absolute;
+    z-index: 7;
+    right: 18px;
+    top: 12px;
+}
+#close:hover, #delete:hover, #edit:hover {
+    color: black;
+    cursor: pointer;
+}
+
+#delete {
+    display: none;
+    color: lightgrey;
+    position: absolute;
+    right: 18px;
+}
+#edit {
+    display: none;
+    color: lightgrey;
+}

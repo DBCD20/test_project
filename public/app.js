@@ -128,7 +128,8 @@ ul.onclick = event => {
                 detailsBox.innerText    = data.acceptSR;
                 detailsBox.dataset.id   = data._id;
                 editable('false'),
-
+                
+                addNewBtn.style.display = '';
                 edit.style.display = 'inline';
                 remove.style.display ='inline';
             }

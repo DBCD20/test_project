@@ -1,7 +1,7 @@
 const db = require('../models')
 
 //INDEX
-exports.getDatas = (req, res) => {
+exports.getData = (req, res) => {
     db.Data.find()
     .then(data => res.json(data))
     .catch(err => console.log("Error in Index" + err))

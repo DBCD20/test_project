@@ -4,10 +4,9 @@ const               searchBox     = document.querySelector('#searchbox'),
                     detailsBox    = document.querySelector('#detailsBox'),
                     addNewBtn     = document.querySelector('#add-new'),
                     fragment      = document.createDocumentFragment(),
-
                     saveBtn       = document.querySelector('#container #save'),
                     caret         = document.querySelector('#span-search i'),
-                    details       = document.querySelector('#details'),
+                    // details       = document.querySelector('#details'),
                     close         = document.querySelector('#close'),
                     remove        = document.querySelector('#delete'),
                     list          = document.querySelector('ul').childNodes,
@@ -19,12 +18,12 @@ let populate = () => {
             ul.innerHTML ='';
             xhr.onreadystatechange = () => {
                 if(xhr.readyState == 4 && xhr.status == 200){
-                    let data = JSON.parse(xhr.responseText)
-                        console.log(data)
-                    data.forEach(name => {
+                    let parsedList = JSON.parse(xhr.responseText)
+                    console.log(parsedList)
+                    parsedList.forEach(function(d) {
                         let li = document.createElement('li')
-                            li.dataset.id = name._id;
-                            li.textContent = name.client;
+                            li.dataset.id = d._id;
+                            li.textContent = d.client;
                             fragment.appendChild(li)
                     })
                     ul.appendChild(fragment)
@@ -32,9 +31,8 @@ let populate = () => {
             }
             xhr.open('GET', '/api/data')
             xhr.send()
-  }
-  
-let editable = (bool) => {
+  },
+editable = (bool) => {
         clientBox.setAttribute('contenteditable', bool)
         detailsBox.setAttribute('contenteditable', bool)
         if(bool){clientBox.focus()}
@@ -43,34 +41,33 @@ let editable = (bool) => {
         clientBox.innerText = arg;
         detailsBox.innerText = arg;
     },
-    
+    clearId = () => {
+        clientBox.removeAttribute('data-id')
+        detailsBox.removeAttribute('data-id')
+    },
     refresh = () => {
-        event.stopPropagation();
         saveBtn.style.display = 'block';
-        editable(true)
-        content('')  
+        close.style.display = 'inline';
+        remove.style.display = 'none';
+        edit.style.display = 'none';
+        editable(true);
+        content('');  
     };
-
-
     
-addNewBtn.onclick = function() {
+addNewBtn.onclick = function(e) {
+    e.stopPropagation()
     editable(true)
     content('')
+    refresh()
+    clearId()
     this.style.display = 'none';
-    saveBtn.style.display = 'block';
+    
+
 }
 
-let newListItem = (data, list) => {
-      let li = document.createElement('li')
-          li.dataset.id = data._id;
-          li.textContent = data.client;
-          fragment.appendChild(li)
-          
-      list.appendChild(fragment)
-}
 
 //CREATE AND UPDATE XHR
-let request = (req, infoData, id) => {
+let request = (req, seedData, id) => {
     let url = {
             POST:   'api/data',
             PUT:    'api/data/' + id + '?_method=PUT',
@@ -78,42 +75,47 @@ let request = (req, infoData, id) => {
         }
     xhr.onreadystatechange = () => {
         if(xhr.readyState == 4 && xhr.status == 200){
-            let data = JSON.parse(xhr.responseText)
-            populate();
+        populate();
     }}
-    xhr.open('POST', url[req])
+    xhr.open('POST', url[req.toUpperCase()])
     xhr.setRequestHeader('content-type', 'application/json')
-    xhr.send(infoData)
+    xhr.send(seedData)
     }
 
 //CREATE NEW CLIENT DB
 saveBtn.onclick  = function(event) {
     event.stopPropagation();
-    saveBtn.style.display = 'none';
     addNewBtn.style.display = 'block';
-    let client  = clientBox.innerText,
+    var client  = clientBox.innerText,
         details = detailsBox.innerText;
     //CLEAR TO TEXT OF DIVS
-    content('')
-    if( client && details == ''){
-        return alert("Please make sure to fill up the form")
+    
+    if( (client && details) === ""){
+        refresh()
+        alert("Please make sure to fill up the form")
+    return
     } else {
-        let infoData = {
+        var infoData = {
             client: client,
             acceptSR: details
     }
-    let Data = JSON.stringify(infoData);
+    var data = JSON.stringify(infoData);
 // ===================================
 //  POST REQUEST TO UPDATE ROUTE
 // ===================================
-      if(clientBox.dataset.id && detailsBox.dataset.id){
-        request('PUT', Data, clientBox.dataset.id)
-    } else {
-        request('POST', Data)
-    }
-    
-    //SEND GET REQUEST TO CREATE ROUTE
-    }
+        if(clientBox.dataset.id && detailsBox.dataset.id){
+            request('PUT', data, clientBox.dataset.id)
+            close.style.display = 'none';
+            remove.style.display = 'none';
+        } else {
+            console.log(data)
+            request('POST', data)
+        }
+  }
+    close.style.display ='none';
+    content('')
+    editable(false)
+    this.style.display = 'none';
 }
 //SHOW SPECIFIC CLIENT
 ul.onclick = event => {
@@ -151,19 +153,24 @@ edit.onclick = function() {
 }
 close.onclick = function(event){
     event.stopPropagation();
-        editable(false)
-        saveBtn.style.display = 'none';
-        edit.style.display = 'inline';
-        this.style.display = 'none';
+    editable(false)
+    saveBtn.style.display = 'none';
+    addNewBtn.style.display = '';
+     this.style.display = 'none';
+        if((clientBox.innerText && detailsBox.innerText) == ''){
+             edit.style.display = 'none';
+        } else {
+             edit.style.display = 'inline';
+        }
+
 }
 //SEARCH BAR
 filterBox.onkeyup = event => {
     event.stopPropagation();
     for( let i = 0; i < list.length; i++){
        if(list[i].innerText.indexOf(filterBox.value) > -1){
-           ul.style.height = '250px';
+           ul.style.height = 'auto';
            list[i].style.display = '';
-           
        } else{
            list[i].style.display = 'none'; 
        }
@@ -172,13 +179,17 @@ filterBox.onkeyup = event => {
 }
 remove.onclick = function(){
     request('DELETE','',clientBox.dataset.id);
+    clearId();
+    editable(false)
     edit.style.display = '';
     this.style.display = '';
+    close.style.display = '';
+    saveBtn.style.display = '';
     content('')
 } 
 caret.onclick = event => {
     if( ul.style.height == 0) {
-        ul.style.height = '250px';
+        ul.style.height = 'auto';
     } else {
         ul.style.height = ''
     }
@@ -186,7 +197,7 @@ caret.onclick = event => {
 }
  filterBox.onfocus = event => {
      event.stopPropagation();
-     ul.style.height = '250px';
+     ul.style.height = 'auto';
      searchBox.style.boxShadow = '0px 5px 17px -6px rgba(57,56,56,0.75)';
  }
 filterBox.onblur = event => {
@@ -195,3 +206,6 @@ filterBox.onblur = event => {
     searchBox.style.boxShadow = 'none';
 }
 window.onload = populate;
+
+//FIX MARGIN OF DETAILS BOX
+//FIX TITLE MATCH WITH EXISTING TITLE

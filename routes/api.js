@@ -7,7 +7,7 @@ const   express         = require('express'),
         
         
 router.route('/')
-.get(helper.getDatas)
+.get(helper.getData)
 .post(helper.createData)
 
 router.route('/:dataid')
